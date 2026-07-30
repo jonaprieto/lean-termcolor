@@ -59,6 +59,21 @@ def brightMagenta : Color := .ansi .bright .magenta
 def brightCyan : Color := .ansi .bright .cyan
 def brightWhite : Color := .ansi .bright .white
 
+/-- The fully saturated, full-brightness color at a hue given in degrees.
+
+The hue wheel wraps, so any `Nat` is a valid argument. Saturation and value are fixed at their
+maximum, which is what gradients and rainbows want; for anything else build `.rgb` directly.
+-/
+def hue (degrees : Nat) : Color :=
+  let ramp : UInt8 := UInt8.ofNat (degrees % 60 * 255 / 60)
+  match (degrees / 60) % 6 with
+  | 0 => .rgb 255 ramp 0
+  | 1 => .rgb (255 - ramp) 255 0
+  | 2 => .rgb 0 255 ramp
+  | 3 => .rgb 0 (255 - ramp) 255
+  | 4 => .rgb ramp 0 255
+  | _ => .rgb 255 0 (255 - ramp)
+
 private def basicIndex : BasicColor → Nat
   | .black => 0
   | .red => 1

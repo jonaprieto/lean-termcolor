@@ -3,7 +3,70 @@ import TermColor
 open TermColor
 open scoped TermColor.Style
 
+/-! A tour of everything `TermColor` can put on a terminal. -/
+
+private def label (name : String) : Text :=
+  Text.styled (name ++ "".pushn ' ' (11 - name.length)) (Style.fg (.indexed 244))
+
+private def row (name : String) (cells : List Text) : Text :=
+  label name ++ Text.concat cells ++ Text.plain "\n"
+
+/-- A row of colored blocks, `count` wide. -/
+private def bar (count : Nat) (color : Nat → Nat → Color) : Text :=
+  Text.perChar ("".pushn ' ' count) fun i n => Style.bg (color i n)
+
+private def attributes : List (String × Style) :=
+  [ ("bold", Style.bold), ("dim", Style.dim), ("italic", Style.italic)
+  , ("underline", Style.underline), ("double", Style.doubleUnderline)
+  , ("blink", Style.blink), ("reverse", Style.reverse), ("strike", Style.strike)
+  , ("overline", Style.overlined), ("framed", Style.framed), ("conceal", Style.conceal) ]
+
+private def basics : List (String × BasicColor) :=
+  [ ("black", .black), ("red", .red), ("green", .green), ("yellow", .yellow)
+  , ("blue", .blue), ("magenta", .magenta), ("cyan", .cyan), ("white", .white) ]
+
+private def words (cells : List Text) : List Text :=
+  cells.map (· ++ Text.plain " ")
+
+private def levelName : ColorLevel → String
+  | .none => "none"
+  | .ansi16 => "16 colors"
+  | .ansi256 => "256 colors"
+  | .trueColor => "true color (24 bit)"
+
+private def heading (title : String) : Text :=
+  Text.plain "\n" ++ Text.styled title (Style.bold <+> Style.fg (.indexed 250)) ++ Text.plain "\n"
+
+private def demo (target : RenderTarget) : Text := Text.concat
+  [ Text.rainbow "termcolor", Text.styled "  ANSI styling for Lean 4\n" Style.dim
+  , heading "attributes"
+  , row "all" (words (attributes.map fun (name, style) => Text.styled name style))
+  , heading "colors"
+  , row "foreground" (words (basics.map fun (name, c) =>
+      Text.styled name (Style.fg (.ansi .normal c))))
+  , row "bright" (words (basics.map fun (name, c) =>
+      Text.styled name (Style.fg (.ansi .bright c))))
+  , row "background" (words (basics.map fun (name, c) =>
+      Text.styled name (Style.bg (.ansi .normal c) <+> Style.fg .black)))
+  , heading "256 color palette"
+  , row "cube" [bar 36 fun i _ => .indexed (UInt8.ofNat (16 + i * 6))]
+  , row "grays" [bar 24 fun i _ => .indexed (UInt8.ofNat (232 + i))]
+  , heading "true color"
+  , row "hue" [bar 72 fun i n => Color.hue (i * 360 / n)]
+  , row "fade" [bar 72 fun i n =>
+      .rgb (UInt8.ofNat (i * 255 / (n - 1))) 64 (UInt8.ofNat (255 - i * 255 / (n - 1)))]
+  , heading "composition"
+  , row "styled" [ Text.styled "hello" (Style.bold <+> Style.cyan)
+                 , Text.styled " world" Style.underline ]
+  , row "nested" [ Text.styled "warning" (Style.bold <+> Style.fg (.rgb 255 170 0))
+                 , Text.plain ": "
+                 , Text.styled "disk almost full" Style.italic ]
+  , row "rainbow" [Text.rainbow "dependent types make terminals pretty"]
+  , heading "target"
+  , row "detected" [Text.plain (levelName target.colors)]
+  , row "styles" [Text.plain (if target.styles then "enabled" else "disabled")]
+  , Text.styled "\nNO_COLOR=1 or a pipe strips every escape above.\n" Style.dim
+  ]
+
 def main : IO Unit := do
-  let hello := Text.styled "hello" (Style.bold <+> Style.cyan)
-  let world := Text.styled " world" Style.underline
-  TermColor.print (hello ++ world)
+  TermColor.print (demo (← TermColor.target))

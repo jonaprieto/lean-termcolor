@@ -54,6 +54,11 @@ theorem render_plain (text : Text) : Text.render .plain text = text.plainText :=
       simp [Style.wrap, Style.sgr, Style.sgrParameters, RenderTarget.plain, String.isEmpty, hne]
   simp [Text.render, Text.plainText, wrap_plain]
 
+theorem concat_append (left right : List Text) :
+    Text.concat (left ++ right) = Text.concat left ++ Text.concat right := by
+  change _ = Text.append _ _
+  simp [Text.concat, Text.append, List.flatMap_append]
+
 theorem render_append (target : RenderTarget) (left right : Text) :
     Text.render target (left ++ right) = Text.render target left ++ Text.render target right := by
   change Text.render target (Text.append left right) = _

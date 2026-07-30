@@ -45,6 +45,18 @@ def append (left right : Text) : Text := { segments := left.segments ++ right.se
 instance : EmptyCollection Text where emptyCollection := empty
 instance : Append Text where append := append
 
+/-- Concatenate text values in order. -/
+def concat (texts : List Text) : Text := { segments := texts.flatMap (·.segments) }
+
+/-- Style every character of a string from its index and the total character count. -/
+def perChar (text : String) (style : Nat → Nat → Style) : Text :=
+  let chars := text.toList
+  { segments := chars.mapIdx fun i c => { text := c.toString, style := style i chars.length } }
+
+/-- Sweep the hue wheel across the characters of a string. -/
+def rainbow (text : String) : Text :=
+  perChar text fun i n => Style.fg (Color.hue (i * 330 / max n 1))
+
 def join : List String → String
   | [] => ""
   | text :: texts => text ++ join texts
