@@ -1,7 +1,7 @@
 /-
-Copyright (c) 2026 Jonathan Cubides. All rights reserved.
+Copyright (c) 2026 Jonathan Prieto-Cubides. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Jonathan Cubides
+Authors: Jonathan Prieto-Cubides
 -/
 
 import TermColor.Ansi
@@ -57,20 +57,13 @@ def perChar (text : String) (style : Nat → Nat → Style) : Text :=
 def rainbow (text : String) : Text :=
   perChar text fun i n => Style.fg (Color.hue (i * 330 / max n 1))
 
-def join : List String → String
-  | [] => ""
-  | text :: texts => text ++ join texts
-
 /-- Remove all ANSI styling while preserving the visible text. -/
 def plainText (text : Text) : String :=
-  join (text.segments.map fun segment => segment.text)
+  String.join (text.segments.map fun segment => segment.text)
 
 /-- Render styled text for an explicit terminal target. -/
 def render (target : RenderTarget) (text : Text) : String :=
-  join (text.segments.map (fun segment => segment.style.wrap target segment.text))
-
-/-- A convenient style application constructor. -/
-def withStyle (style : Style) (text : String) : Text := styled text style
+  String.join (text.segments.map (fun segment => segment.style.wrap target segment.text))
 
 end Text
 

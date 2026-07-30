@@ -1,7 +1,7 @@
 /-
-Copyright (c) 2026 Jonathan Cubides. All rights reserved.
+Copyright (c) 2026 Jonathan Prieto-Cubides. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Jonathan Cubides
+Authors: Jonathan Prieto-Cubides
 -/
 
 import TermColor
@@ -33,11 +33,17 @@ theorem style_combine_assoc (left middle right : Style) :
   cases right
   simp [Style.combine, List.append_assoc]
 
+private theorem foldl_append_left (init : String) (texts : List String) :
+    texts.foldl (· ++ ·) init = init ++ texts.foldl (· ++ ·) "" := by
+  induction texts generalizing init with
+  | nil => simp
+  | cons first rest ih =>
+      rw [List.foldl_cons, List.foldl_cons, ih (init ++ first), ih ("" ++ first)]
+      simp [String.append_assoc]
+
 theorem join_append (left right : List String) :
-    Text.join (left ++ right) = Text.join left ++ Text.join right := by
-  induction left with
-  | nil => simp [Text.join]
-  | cons first rest ih => simp [Text.join, ih, String.append_assoc]
+    String.join (left ++ right) = String.join left ++ String.join right := by
+  simp [String.join, List.foldl_append, foldl_append_left (left.foldl (· ++ ·) "")]
 
 theorem render_plain (text : Text) : Text.render .plain text = text.plainText := by
   have wrap_plain (segment : Segment) :
