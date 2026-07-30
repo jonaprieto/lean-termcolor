@@ -5,4 +5,4 @@ Authors: Jonathan Cubides
 -/
 
 import Properties.Basic
-import Properties.Smoke
+import Properties.Examples
