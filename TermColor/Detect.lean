@@ -28,16 +28,13 @@ private def nonEmpty (value : Option String) : Bool :=
   | some value => !value.isEmpty
   | none => false
 
-private def hasSuffix (suffix value : String) : Bool :=
-  value.toList.reverse.take suffix.length == suffix.toList.reverse
-
 private def detectedLevel (term colorterm : Option String) : ColorLevel :=
   match colorterm with
   | some value =>
       if value == "truecolor" || value == "24bit" then .trueColor else .ansi16
   | none =>
       match term with
-      | some value => if hasSuffix "-256color" value then .ansi256 else .ansi16
+      | some value => if value.endsWith "-256color" then .ansi256 else .ansi16
       | none => .ansi16
 
 private def dumbTerm (term : Option String) : Bool :=

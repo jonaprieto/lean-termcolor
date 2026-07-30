@@ -39,34 +39,26 @@ inductive Layer where
 namespace Color
 
 private def ansiCode (layer : Layer) (index : UInt8) : Nat :=
-  let base := match layer with | .foreground => 30 | .background => 40
-  base + index.toNat
+  if index < 8 then
+    let base := match layer with | .foreground => 30 | .background => 40
+    base + index.toNat
+  else
+    let base := match layer with | .foreground => 90 | .background => 100
+    base + index.toNat - 8
 
-private def brightCode (layer : Layer) (index : UInt8) : Nat :=
-  let base := match layer with | .foreground => 90 | .background => 100
-  base + index.toNat - 8
+private def defaultCode : Layer → Nat
+  | .foreground => 39
+  | .background => 49
 
 private def ansi16Codes (layer : Layer) : Color → List Nat
-  | .default => [match layer with | .foreground => 39 | .background => 49]
-  | .ansi intensity basic =>
-      let i := ansiIndex intensity basic
-      [if i < 8 then ansiCode layer i else brightCode layer i]
-  | .indexed index =>
-      if index < 16 then
-        [if index < 8 then ansiCode layer index else brightCode layer index]
-      else
-        let rgb := ansi256Rgb index
-        let i := rgbToAnsi16 (UInt8.ofNat rgb.1) (UInt8.ofNat rgb.2.1) (UInt8.ofNat rgb.2.2)
-        [if i < 8 then ansiCode layer i else brightCode layer i]
-  | .rgb r g b =>
-      let i := rgbToAnsi16 r g b
-      [if i < 8 then ansiCode layer i else brightCode layer i]
+  | .default => [defaultCode layer]
+  | color => [ansiCode layer (color.toAnsi16.getD 0)]
 
 private def ansi256Codes (layer : Layer) : Color → List Nat
-  | .default => [match layer with | .foreground => 39 | .background => 49]
+  | .default => [defaultCode layer]
   | .ansi intensity basic =>
       let i := ansiIndex intensity basic
-      [if i < 8 then ansiCode layer i else brightCode layer i]
+      [ansiCode layer i]
   | color =>
       let i := color.toAnsi256.getD 0
       match layer with
@@ -74,10 +66,10 @@ private def ansi256Codes (layer : Layer) : Color → List Nat
       | .background => [48, 5, i.toNat]
 
 private def trueColorCodes (layer : Layer) : Color → List Nat
-  | .default => [match layer with | .foreground => 39 | .background => 49]
+  | .default => [defaultCode layer]
   | .ansi intensity basic =>
       let i := ansiIndex intensity basic
-      [if i < 8 then ansiCode layer i else brightCode layer i]
+      [ansiCode layer i]
   | .indexed index =>
       match layer with
       | .foreground => [38, 5, index.toNat]
@@ -132,13 +124,8 @@ private def settingCodes (target : RenderTarget) : Setting → List Nat
   | .background color => Color.sgrCodes .background target.colors color
   | .attr kind enabled => attributeCodes kind enabled
 
-private def joinWith (_ : String) : List String → String
-  | [] => ""
-  | [x] => x
-  | x :: xs => x ++ ";" ++ joinWith ";" xs
-
 private def codesToString (codes : List Nat) : String :=
-  joinWith ";" (codes.map toString)
+  String.intercalate ";" (codes.map toString)
 
 /-- The SGR parameter string for a style at a target capability. -/
 def sgrParameters (target : RenderTarget) (style : Style) : List Nat :=
