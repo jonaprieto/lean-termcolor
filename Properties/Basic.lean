@@ -46,7 +46,7 @@ theorem render_plain (text : Text) : Text.render .plain text = text.plainText :=
     · have hsize : segment.text.utf8ByteSize = 0 := by
         simpa [String.isEmpty] using h
       have hempty : segment.text = "" := String.utf8ByteSize_eq_zero_iff.mp hsize
-      simp [Style.wrap, Style.sgr, Style.sgrParameters, RenderTarget.plain, String.isEmpty, hempty]
+      simp [Style.wrap, String.isEmpty, hempty]
     · have hne : segment.text ≠ "" := by
         intro hempty
         apply h
