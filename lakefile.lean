@@ -2,6 +2,7 @@ import Lake
 open Lake DSL
 
 package «termcolor» where
+  version := v!"1.0.0"
   leanOptions := #[⟨`autoImplicit, false⟩, ⟨`relaxedAutoImplicit, false⟩]
 
 -- API documentation is opt-in so normal users keep the zero-dependency core.
