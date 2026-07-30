@@ -1,15 +1,27 @@
 # termcolor
 
-Proof-friendly terminal colors and text styles for Lean 4.
+[![CI](https://github.com/jonaprieto/lean-termcolor/actions/workflows/ci.yml/badge.svg)](https://github.com/jonaprieto/lean-termcolor/actions/workflows/ci.yml)
+[![Lean 4](https://img.shields.io/badge/Lean%204-library-5f5f5f)](lean-toolchain)
+[![License](https://img.shields.io/badge/license-Apache--2.0-green)](LICENSE)
 
-`termcolor` models the parts of ANSI Select Graphic Rendition that are useful for command-line
-programs: the eight standard colors, bright colors, the xterm 256-color palette, RGB colors,
-backgrounds, and common text attributes. Styled text is pure data. Rendering is pure too; IO is
-only used when the library chooses a target for the current stdout.
+ANSI colors and styled text for Lean 4.
 
-The package has no dependencies outside Lean's standard library.
+`termcolor` keeps styled output as pure data. It supports the standard ANSI colors, bright
+colors, the xterm 256-color palette, RGB colors, backgrounds, and common text attributes. IO is
+limited to choosing a target for the current stdout and printing the rendered text.
 
-## A small example
+## Install
+
+Add the package to `lakefile.toml`:
+
+```toml
+[[require]]
+name = "termcolor"
+git = "https://github.com/jonaprieto/lean-termcolor"
+rev = "main"
+```
+
+## Quick start
 
 ```lean
 import TermColor
@@ -21,96 +33,45 @@ def message : Text :=
   Text.styled "ready" (Style.bold <+> Style.green)
 
 #eval Text.render RenderTarget.ansi16 message
-#eval Text.render RenderTarget.plain message
 
 def main : IO Unit :=
   TermColor.print message
 ```
 
-`TermColor.print` uses a conservative automatic policy. Use `TermColor.print message .always`
-when a command-line option explicitly asks for ANSI output, or render directly with
-`RenderTarget.ansi16`, `RenderTarget.ansi256`, `RenderTarget.trueColor`, or `RenderTarget.plain`.
+Use `Text.render` when the output target is known. Use `TermColor.print` when the library should
+choose a target from the environment.
 
-## The model
+## API at a glance
 
-There are three separate ideas:
+- `Color.red`, `Color.brightBlue`, `Color.indexed 196`, `Color.rgb 255 127 0`, and
+  `Color.default` describe colors independently of a terminal.
+- `Style.bold <+> Style.red` composes SGR settings from left to right. Composition is associative,
+  `Style.empty` is its identity, and the rightmost setting wins when settings overlap.
+- `Text.styled "warning" Style.yellow ++ Text.plain "!"` preserves text order and style
+  boundaries.
+- `RenderTarget.plain`, `.ansi16`, `.ansi256`, and `.trueColor` make fallback behavior explicit.
 
-- `Color` is terminal-independent data: `Color.red`, `Color.brightBlue`,
-  `Color.indexed 196`, `Color.rgb 255 127 0`, and `Color.default`.
-- `Style` is a sequence of SGR settings. `Style.bold <+> Style.red` means “apply bold, then
-  red”. The operator is associative, has `Style.empty` as its identity, and is intentionally
-  not commutative: for overlapping settings the rightmost one wins.
-- `Text` is an ordered list of segments. `Text.styled "warning" Style.yellow ++ Text.plain "!"`
-  preserves the style boundary and the visible text order.
+RGB fallback uses the conventional xterm palette. A terminal may let users redefine that palette,
+so exact RGB output requires `RenderTarget.trueColor`.
 
-An explicit `RenderTarget` controls degradation:
+## Automatic output
 
-| target | emitted colors |
-| --- | --- |
-| `plain` | no ANSI sequences |
-| `ansi16` | the eight standard colors and their bright variants |
-| `ansi256` | the xterm 256-color palette |
-| `trueColor` | 24-bit RGB, plus ANSI and indexed colors |
+`TermColor.print` is conservative: redirected output is plain by default, while active terminals
+receive ANSI output. It respects the standard `NO_COLOR` and `FORCE_COLOR` conventions, and
+`ColorChoice.always` and `.never` are explicit overrides.
 
-RGB fallback uses the conventional xterm palette. Since terminals may let users redefine their
-palette, RGB-to-ANSI fallback is an approximation; code that needs exact RGB should request
-`RenderTarget.trueColor`.
+Pass an explicit `RenderTarget` when the caller knows more about the destination than environment
+detection can determine.
 
-## Automatic output policy
+## Development
 
-`TermColor.target` and `TermColor.print` use the process environment and Lean's portable `isTty`
-operation:
-
-1. `ColorChoice.never` always produces plain output.
-2. A non-empty `NO_COLOR` suppresses colors. It does not suppress non-color attributes when
-   stdout is an active terminal.
-3. A non-empty `FORCE_COLOR`, or `ColorChoice.always`, enables ANSI output even when stdout is
-   redirected.
-4. `TERM=dumb` and `TERM=unknown` disable automatic ANSI output.
-5. A TTY receives ANSI output; redirected output is plain by default.
-
-`COLORTERM=truecolor`/`24bit` selects true color. A `TERM` ending in `-256color` selects the
-256-color palette. Detection is deliberately conservative and can never know how a terminal has
-reconfigured its palette, so callers with stronger knowledge should pass an explicit target.
-
-## Proofs
-
-The executable library is kept separate from `Properties`, which currently proves:
-
-- style identity and associativity;
-- concatenation of the text renderer;
-- plain rendering preserves the underlying text.
-
-These are Lean theorems, not runtime tests. `Properties` imports only `TermColor`; mathlib is not
-needed.
-
-Build both the library and its theorem package with:
+The executable library has no external runtime dependencies. The separate `Properties` package
+keeps API properties out of the runtime library and does not require mathlib.
 
 ```sh
 lake build TermColor Properties demo
-```
-
-Run the sample executable with:
-
-```sh
 lake exe demo
 ```
-
-## Why this shape?
-
-The data types follow a useful common ground in existing terminal libraries. Haskell's
-`ansi-terminal` separates SGR constructors such as intensity, underlining, layers, basic colors,
-palette indices, and RGB. OCaml's `ansifmt` treats a style as an associative, non-commutative
-composition. Rich's `Style` uses tri-state attributes and its `Text` stores styled spans. Here,
-the same semantics are represented by a small list of typed settings, which keeps composition
-transparent to both humans and proofs.
-
-References: [Rich](https://github.com/Textualize/rich),
-[termcolor-c](https://github.com/ararslan/termcolor-c),
-[ansi-terminal types](https://hackage.haskell.org/package/ansi-terminal-0.9.1/docs/System-Console-ANSI-Types.html),
-[OCaml ansifmt](https://ocaml.org/p/ansifmt/latest/doc/ansifmt/Ansifmt/Ansi/index.html),
-[POSIX terminfo](https://pubs.opengroup.org/onlinepubs/7908799/xcurses/terminfo.html),
-[NO_COLOR](https://no-color.org/), and [FORCE_COLOR](https://force-color.org/).
 
 ## License
 
