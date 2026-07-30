@@ -5,6 +5,7 @@ Authors: Jonathan Prieto-Cubides
 -/
 
 import TermColor.Color
+import TermColor.ColorScheme
 import TermColor.Style
 import TermColor.Ansi
 import TermColor.Text

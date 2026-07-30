@@ -49,6 +49,8 @@ choose a target from the environment.
 
 - `Color.red`, `Color.brightBlue`, `Color.indexed 196`, `Color.rgb 255 127 0`, and
   `Color.default` describe colors independently of a terminal.
+- `ColorScheme.catppuccin`, `ColorScheme.dracula`, and `ColorScheme.monokai` provide semantic
+  palettes for terminal UIs.
 - `Style.bold <+> Style.red` composes SGR settings from left to right. Composition is associative,
   `Style.empty` is its identity, and the rightmost setting wins when settings overlap.
 - `Text.styled "warning" Style.yellow ++ Text.plain "!"` preserves text order and style

@@ -24,6 +24,10 @@ theorem red_is_normal_ansi : Color.red = Color.ansi .normal .red := by
 theorem bright_blue_is_bright_ansi : Color.brightBlue = Color.ansi .bright .blue := by
   rfl
 
+theorem dracula_background_is_canonical :
+    ColorScheme.dracula.background = Color.rgb 40 42 54 := by
+  rfl
+
 theorem rgb_red_uses_xterm_196 : Color.rgbToAnsi256 255 0 0 = 196 := by
   decide
 
