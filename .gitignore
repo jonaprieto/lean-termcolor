@@ -1,0 +1,6 @@
+.lake/
+*.olean
+*.ilean
+*.c
+*.c.o
+.DS_Store
