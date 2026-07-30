@@ -38,6 +38,10 @@ def main : IO Unit :=
   TermColor.print message
 ```
 
+Here is the demo output in a terminal:
+
+![termcolor demo output](assets/demo.png)
+
 Use `Text.render` when the output target is known. Use `TermColor.print` when the library should
 choose a target from the environment.
 

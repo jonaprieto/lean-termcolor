@@ -69,4 +69,5 @@ private def demo (target : RenderTarget) : Text := Text.concat
   ]
 
 def main : IO Unit := do
-  TermColor.print (demo (← TermColor.target))
+  let target ← TermColor.target
+  IO.print (Text.render target (demo target))
