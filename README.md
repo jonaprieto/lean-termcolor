@@ -40,6 +40,13 @@ def main : IO Unit :=
   TermColor.print message
 ```
 
+For deterministic output, render the same value with an explicit target:
+
+```lean
+#eval Text.render RenderTarget.plain message
+#eval Text.render RenderTarget.ansi16 message
+```
+
 Here is the demo output in a terminal:
 
 ![termcolor demo output](assets/demo.png)
