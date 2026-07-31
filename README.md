@@ -80,11 +80,11 @@ detection can determine.
 
 ## Development
 
-The executable library has no external runtime dependencies. The separate `Properties` package
+The executable library has no external runtime dependencies. The separate `TermColor.Properties` package
 keeps API properties out of the runtime library and does not require mathlib.
 
 ```sh
-lake build TermColor Properties demo
+lake build TermColor TermColor.Properties demo
 lake exe demo
 ```
 

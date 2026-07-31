@@ -12,10 +12,12 @@ meta if get_config? env = some "dev" then
 
 @[default_target]
 lean_lib «TermColor» where
-  globs := #[.andSubmodules `TermColor]
+  globs := #[.one `TermColor, .one `TermColor.Ansi, .one `TermColor.Color,
+    .one `TermColor.ColorScheme, .one `TermColor.Detect, .one `TermColor.Style,
+    .one `TermColor.Text]
 
-lean_lib «Properties» where
-  globs := #[.andSubmodules `Properties]
+lean_lib «TermColor.Properties» where
+  globs := #[.andSubmodules `TermColor.Properties]
 
 lean_exe «demo» where
   root := `Demo

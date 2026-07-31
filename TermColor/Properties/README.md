@@ -1,4 +1,4 @@
-# Properties
+# TermColor.Properties
 
 Machine-checked statements about the `TermColor` API. This package is not built into the
 runtime library and does not depend on mathlib, so a property may be added here without
