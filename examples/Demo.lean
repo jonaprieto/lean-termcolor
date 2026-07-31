@@ -1,4 +1,5 @@
 import TermColor
+import TermColor.Detect
 
 open TermColor
 open scoped TermColor.Style

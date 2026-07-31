@@ -7,8 +7,9 @@
 ANSI colors and styled text for Lean 4.
 
 `termcolor` keeps styled output as pure data. It supports the standard ANSI colors, bright
-colors, the xterm 256-color palette, RGB colors, backgrounds, and common text attributes. IO is
-limited to choosing a target for the current stdout and printing the rendered text.
+colors, the xterm 256-color palette, RGB colors, backgrounds, and common text attributes. The
+core has no terminal IO; import `TermColor.Detect` for environment-based target selection and
+printing.
 
 ## Install
 
@@ -25,6 +26,7 @@ rev = "main"
 
 ```lean
 import TermColor
+import TermColor.Detect
 
 open TermColor
 open scoped TermColor.Style
@@ -42,8 +44,8 @@ Here is the demo output in a terminal:
 
 ![termcolor demo output](assets/demo.png)
 
-Use `Text.render` when the output target is known. Use `TermColor.print` when the library should
-choose a target from the environment.
+Use `Text.render` when the output target is known. Import `TermColor.Detect` and use
+`TermColor.print` when the library should choose a target from the environment.
 
 ## API at a glance
 
@@ -62,7 +64,7 @@ so exact RGB output requires `RenderTarget.trueColor`.
 
 ## Automatic output
 
-`TermColor.print` is conservative: redirected output is plain by default, while active terminals
+`TermColor.Detect` is conservative: redirected output is plain by default, while active terminals
 receive ANSI output. It respects the standard `NO_COLOR` and `FORCE_COLOR` conventions, and
 `ColorChoice.always` and `.never` are explicit overrides.
 
