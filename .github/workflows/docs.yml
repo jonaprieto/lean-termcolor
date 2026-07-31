@@ -39,8 +39,8 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Build API docs
         run: |
-          lake -R -Kenv=dev update
-          lake -R -Kenv=dev build TermColor:docs
+          lake -d docbuild update
+          lake -d docbuild build TermColor:docs
           touch .lake/build/doc/.nojekyll
       - uses: actions/upload-pages-artifact@v3
         with:

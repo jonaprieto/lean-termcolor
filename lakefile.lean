@@ -12,10 +12,9 @@ meta if get_config? env = some "dev" then
 
 @[default_target]
 lean_lib «TermColor» where
-  -- Do not make `TermColor` a root: Lake would claim every `TermColor.*` module,
-  -- preventing satellite packages from owning `TermColor.Layout` and friends.
-  roots := #[`TermColor.Ansi, `TermColor.Color, `TermColor.ColorScheme,
-    `TermColor.Detect, `TermColor.Style, `TermColor.Text]
+  -- Keep roots empty: a `TermColor` root would claim every satellite module
+  -- (`TermColor.Layout`, `TermColor.Widgets`, and `TermColor.Terminal`).
+  roots := #[]
   globs := #[.one `TermColor, .one `TermColor.Ansi, .one `TermColor.Color,
     .one `TermColor.ColorScheme, .one `TermColor.Detect, .one `TermColor.Style,
     .one `TermColor.Text]

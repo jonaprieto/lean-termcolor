@@ -78,15 +78,20 @@ receive ANSI output. It respects the standard `NO_COLOR` and `FORCE_COLOR` conve
 Pass an explicit `RenderTarget` when the caller knows more about the destination than environment
 detection can determine.
 
-## Development
+## Build and development
 
-The executable library has no external runtime dependencies. The separate `TermColor.Properties` package
-keeps API properties out of the runtime library and does not require mathlib.
+The runtime library has no external dependencies. `TermColor.Properties` keeps machine-checked API
+properties out of the runtime build and does not require mathlib.
 
 ```sh
 lake build TermColor TermColor.Properties demo
 lake exe demo
 ```
+
+The stack is split into focused packages: [`termcolor-layout`](https://github.com/jonaprieto/lean-termcolor-layout)
+for display width and layout, [`termcolor-widgets`](https://github.com/jonaprieto/lean-termcolor-widgets)
+for pure CLI widgets, and [`termcolor-terminal`](https://github.com/jonaprieto/lean-termcolor-terminal)
+for terminal control and live IO.
 
 ## License
 
