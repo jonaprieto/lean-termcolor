@@ -72,8 +72,9 @@ so exact RGB output requires `RenderTarget.trueColor`.
 ## Automatic output
 
 `TermColor.Detect` is conservative: redirected output is plain by default, while active terminals
-receive ANSI output. It respects the standard `NO_COLOR` and `FORCE_COLOR` conventions, and
-`ColorChoice.always` and `.never` are explicit overrides.
+receive ANSI output. A non-empty `NO_COLOR` disables colors and `FORCE_COLOR` but retains text
+attributes on a TTY; `TERM=dumb` disables all styling. `ColorChoice.always` and `.never` are
+explicit overrides, except that `NO_COLOR` and `TERM=dumb` remain safety wins.
 
 Pass an explicit `RenderTarget` when the caller knows more about the destination than environment
 detection can determine.

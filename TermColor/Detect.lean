@@ -9,10 +9,10 @@ import TermColor.Text
 /-!
 # TermColor.Detect: conservative terminal selection and output
 
-Detection follows common command-line conventions: `NO_COLOR` wins, a non-empty
-`FORCE_COLOR` enables ANSI output even when stdout is redirected, and `TERM=dumb` disables
-ANSI output. This is policy, not part of the pure rendering model, so callers can always pass
-an explicit `RenderTarget` instead.
+Detection follows common command-line conventions: `NO_COLOR` wins over `FORCE_COLOR` and
+disables colors while retaining text attributes on a TTY, a non-empty `FORCE_COLOR` enables ANSI
+output even when stdout is redirected, and `TERM=dumb` disables all styling. This is policy, not
+part of the pure rendering model, so callers can always pass an explicit `RenderTarget` instead.
 -/
 
 namespace TermColor
@@ -31,7 +31,10 @@ private def nonEmpty (value : Option String) : Bool :=
 private def detectedLevel (term colorterm : Option String) : ColorLevel :=
   match colorterm with
   | some value =>
-      if value == "truecolor" || value == "24bit" then .trueColor else .ansi16
+      if value == "truecolor" || value == "24bit" then .trueColor
+      else match term with
+        | some value => if value.endsWith "-256color" then .ansi256 else .ansi16
+        | none => .ansi16
   | none =>
       match term with
       | some value => if value.endsWith "-256color" then .ansi256 else .ansi16
@@ -47,19 +50,19 @@ def target (choice : ColorChoice := .auto) : IO RenderTarget := do
   let noColor := nonEmpty (← IO.getEnv "NO_COLOR")
   let forceColor := nonEmpty (← IO.getEnv "FORCE_COLOR")
   let term := ← IO.getEnv "TERM"
-  let colorterm := ← IO.getEnv "COLORTERM"
+  let colorterm ← IO.getEnv "COLORTERM"
+  let colorterm := colorterm.filter (· != "")
   let tty ← (← IO.getStdout).isTty
   let level := detectedLevel term colorterm
   let forced := choice == .always || forceColor
-  let active := forced || tty
   if choice == .never then
     pure .plain
-  else if noColor then
-    pure { styles := active, colors := .none }
-  else if forced then
-    pure { styles := true, colors := level }
   else if dumbTerm term then
     pure .plain
+  else if noColor then
+    pure { styles := tty, colors := .none }
+  else if forced then
+    pure { styles := true, colors := level }
   else if tty then
     pure { styles := true, colors := level }
   else

@@ -51,7 +51,8 @@ def concat (texts : List Text) : Text := { segments := texts.flatMap (·.segment
 /-- Style every character of a string from its index and the total character count. -/
 def perChar (text : String) (style : Nat → Nat → Style) : Text :=
   let chars := text.toList
-  { segments := chars.mapIdx fun i c => { text := c.toString, style := style i chars.length } }
+  let count := chars.length
+  { segments := chars.mapIdx fun i c => { text := c.toString, style := style i count } }
 
 /-- Sweep the hue wheel across the characters of a string. -/
 def rainbow (text : String) : Text :=

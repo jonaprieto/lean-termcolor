@@ -31,6 +31,12 @@ theorem dracula_background_is_canonical :
 theorem rgb_red_uses_xterm_196 : Color.rgbToAnsi256 255 0 0 = 196 := by
   decide
 
+theorem rgb_black_uses_xterm_16 : Color.rgbToAnsi256 0 0 0 = 16 := by
+  decide
+
+theorem rgb_white_uses_xterm_231 : Color.rgbToAnsi256 255 255 255 = 231 := by
+  decide
+
 theorem gray_128_uses_xterm_244 : Color.rgbToAnsi256 128 128 128 = 244 := by
   decide
 

@@ -3,4 +3,5 @@
 *.ilean
 *.c
 *.c.o
+/.packages/
 .DS_Store

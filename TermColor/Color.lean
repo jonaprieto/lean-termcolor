@@ -131,11 +131,14 @@ private def channel6 (x : UInt8) : Nat := (x.toNat * 5 + 127) / 255
 
 /-- The xterm 256-color index nearest to an RGB color.
 
-The 6×6×6 cube is used for chromatic colors and the 24-step grayscale ramp for exact grays.
+The 6×6×6 cube is used for chromatic colors and the 8..238 grayscale ramp for exact grays;
+pure black and white use the exact ANSI-16 endpoints.
 -/
 def rgbToAnsi256 (r g b : UInt8) : UInt8 :=
   if r == g && g == b then
-    UInt8.ofNat (232 + (r.toNat * 23 + 127) / 255)
+    if r.toNat < 8 then 16
+    else if r.toNat > 248 then 231
+    else UInt8.ofNat (232 + min 23 ((r.toNat - 8 + 5) / 10))
   else
     UInt8.ofNat (16 + 36 * channel6 r + 6 * channel6 g + channel6 b)
 
