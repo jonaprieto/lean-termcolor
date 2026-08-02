@@ -12,8 +12,10 @@ open scoped TermColor.Style
 
 /-! A tour of everything `TermColor` can put on a terminal. -/
 
+private def demoPalette : ColorScheme := ColorScheme.catppuccin
+
 private def label (name : String) : Text :=
-  Text.styled (name ++ "".pushn ' ' (11 - name.length)) (Style.fg (.indexed 244))
+  Text.styled (name ++ "".pushn ' ' (11 - name.length)) (Style.fg demoPalette.comment)
 
 private def row (name : String) (cells : List Text) : Text :=
   label name ++ Text.concat cells ++ Text.plain "\n"
@@ -42,10 +44,11 @@ private def levelName : ColorLevel → String
   | .trueColor => "true color (24 bit)"
 
 private def heading (title : String) : Text :=
-  Text.plain "\n" ++ Text.styled title (Style.bold <+> Style.fg (.indexed 250)) ++ Text.plain "\n"
+  Text.plain "\n" ++ Text.styled title (Style.bold <+> Style.fg demoPalette.foreground) ++ Text.plain "\n"
 
 private def demo (target : RenderTarget) : Text := Text.concat
-  [ Text.rainbow "termcolor", Text.styled "  ANSI styling for Lean 4\n" Style.dim
+  [ Text.rainbow "termcolor"
+  , Text.styled "  ANSI styling for Lean 4\n" (Style.dim <+> Style.fg demoPalette.comment)
   , heading "attributes"
   , row "all" (words (attributes.map fun (name, style) => Text.styled name style))
   , heading "colors"
@@ -63,16 +66,17 @@ private def demo (target : RenderTarget) : Text := Text.concat
   , row "fade" [bar 72 fun i n =>
       .rgb (UInt8.ofNat (i * 255 / (n - 1))) 64 (UInt8.ofNat (255 - i * 255 / (n - 1)))]
   , heading "composition"
-  , row "styled" [ Text.styled "hello" (Style.bold <+> Style.cyan)
+  , row "styled" [ Text.styled "hello" (Style.bold <+> Style.fg demoPalette.cyan)
                  , Text.styled " world" Style.underline ]
-  , row "nested" [ Text.styled "warning" (Style.bold <+> Style.fg (.rgb 255 170 0))
+  , row "nested" [ Text.styled "warning" (Style.bold <+> Style.fg demoPalette.orange)
                  , Text.plain ": "
                  , Text.styled "disk almost full" Style.italic ]
   , row "rainbow" [Text.rainbow "dependent types make terminals pretty"]
   , heading "target"
   , row "detected" [Text.plain (levelName target.colors)]
   , row "styles" [Text.plain (if target.styles then "enabled" else "disabled")]
-  , Text.styled "\nNO_COLOR=1 or a pipe strips every escape above.\n" Style.dim
+  , Text.styled "\nNO_COLOR=1 or a pipe strips every escape above.\n"
+      (Style.dim <+> Style.fg demoPalette.comment)
   ]
 
 def main : IO Unit := do
