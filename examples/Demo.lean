@@ -44,7 +44,8 @@ private def levelName : ColorLevel → String
   | .trueColor => "true color (24 bit)"
 
 private def heading (title : String) : Text :=
-  Text.plain "\n" ++ Text.styled title (Style.bold <+> Style.fg demoPalette.foreground) ++ Text.plain "\n"
+  Text.plain "\n" ++
+    Text.styled title (Style.bold <+> Style.fg demoPalette.foreground) ++ Text.plain "\n"
 
 private def demo (target : RenderTarget) : Text := Text.concat
   [ Text.rainbow "termcolor"
