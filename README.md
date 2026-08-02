@@ -92,7 +92,8 @@ lake exe demo
 The stack is split into focused packages: [`termcolor-layout`](https://github.com/jonaprieto/lean-termcolor-layout)
 for display width and layout, [`termcolor-widgets`](https://github.com/jonaprieto/lean-termcolor-widgets)
 for pure CLI widgets, and [`termcolor-terminal`](https://github.com/jonaprieto/lean-termcolor-terminal)
-for terminal control and live IO.
+for terminal control and live IO. [`argus`](https://github.com/jonaprieto/lean-argus) builds
+typed command-line parsing and derived help on top of the stack.
 
 ## License
 
