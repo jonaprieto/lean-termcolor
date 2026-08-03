@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 590" role="img" aria-labelledby="title desc">
+  <title id="title">termcolor terminal targets</title>
+  <desc id="desc">The same styled diagnostic rendered as plain, ANSI-16, ANSI-256, and true color output.</desc>
+  <rect width="1200" height="590" rx="20" fill="#181825"/>
+  <text x="48" y="58" fill="#cdd6f4" font-family="SFMono-Regular,Menlo,monospace" font-size="28" font-weight="700">One value · four output targets</text>
+  <text x="48" y="91" fill="#a6adc8" font-family="SFMono-Regular,Menlo,monospace" font-size="17">the renderer changes terminal escapes, never the visible structure</text>
+  <g font-family="SFMono-Regular,Menlo,monospace">
+    <rect x="38" y="126" width="268" height="394" rx="14" fill="#1e1e2e" stroke="#6c7086" stroke-width="2"/>
+    <rect x="38" y="126" width="268" height="48" rx="14" fill="#292b3b"/><rect x="38" y="156" width="268" height="18" fill="#292b3b"/>
+    <text x="62" y="157" fill="#a6adc8" font-size="16" font-weight="700">plain / NO_COLOR</text>
+    <text x="62" y="218" fill="#cdd6f4" font-size="18">error [E1001]</text><text x="62" y="252" fill="#cdd6f4" font-size="16">╰─&gt; config.toml:1:11</text>
+    <text x="62" y="300" fill="#cdd6f4" font-size="16">1 │ timeout = 2x</text><text x="176" y="330" fill="#cdd6f4" font-size="16">^^</text>
+    <text x="62" y="390" fill="#a6e3a1" font-size="16">help:</text><text x="62" y="422" fill="#cdd6f4" font-size="16">try timeout = 2m</text>
+    <text x="62" y="478" fill="#6c7086" font-size="14">visible text only</text>
+    <rect x="326" y="126" width="268" height="394" rx="14" fill="#1e1e2e" stroke="#f9e2af" stroke-width="2"/>
+    <rect x="326" y="126" width="268" height="48" rx="14" fill="#292b3b"/><rect x="326" y="156" width="268" height="18" fill="#292b3b"/>
+    <text x="350" y="157" fill="#f9e2af" font-size="16" font-weight="700">ansi-16</text>
+    <text x="350" y="218" fill="#f38ba8" font-size="18" font-weight="700">error</text><text x="421" y="218" fill="#cdd6f4" font-size="18"> [E1001]</text>
+    <text x="350" y="252" fill="#cdd6f4" font-size="16">╰─&gt; config.toml:1:11</text><text x="350" y="300" fill="#cdd6f4" font-size="16">1 │ timeout = 2x</text>
+    <text x="464" y="330" fill="#f38ba8" font-size="16">^^</text><text x="350" y="390" fill="#a6e3a1" font-size="16">help:</text>
+    <text x="350" y="422" fill="#cdd6f4" font-size="16">try timeout = 2m</text><text x="350" y="478" fill="#6c7086" font-size="14">16-color fallback</text>
+    <rect x="614" y="126" width="268" height="394" rx="14" fill="#1e1e2e" stroke="#89b4fa" stroke-width="2"/>
+    <rect x="614" y="126" width="268" height="48" rx="14" fill="#292b3b"/><rect x="614" y="156" width="268" height="18" fill="#292b3b"/>
+    <text x="638" y="157" fill="#89b4fa" font-size="16" font-weight="700">ansi-256</text>
+    <text x="638" y="218" fill="#f38ba8" font-size="18" font-weight="700">error</text><text x="709" y="218" fill="#cdd6f4" font-size="18"> [E1001]</text>
+    <text x="638" y="252" fill="#94e2d5" font-size="16" font-weight="700">config.toml</text><text x="750" y="252" fill="#cdd6f4" font-size="16">:1:11</text>
+    <text x="638" y="300" fill="#cdd6f4" font-size="16">1 │ timeout = 2x</text><text x="752" y="330" fill="#f38ba8" font-size="16">^^</text>
+    <text x="638" y="390" fill="#a6e3a1" font-size="16">help:</text><text x="638" y="422" fill="#cdd6f4" font-size="16">try timeout = 2m</text>
+    <text x="638" y="478" fill="#6c7086" font-size="14">indexed palette</text>
+    <rect x="902" y="126" width="268" height="394" rx="14" fill="#1e1e2e" stroke="#cba6f7" stroke-width="2"/>
+    <rect x="902" y="126" width="268" height="48" rx="14" fill="#292b3b"/><rect x="902" y="156" width="268" height="18" fill="#292b3b"/>
+    <text x="926" y="157" fill="#cba6f7" font-size="16" font-weight="700">true-color + OSC-8</text>
+    <text x="926" y="218" fill="#f38ba8" font-size="18" font-weight="700">error</text><text x="997" y="218" fill="#cdd6f4" font-size="18"> [E1001]</text>
+    <text x="926" y="252" fill="#94e2d5" font-size="16" font-weight="700" text-decoration="underline">config.toml</text><text x="1038" y="252" fill="#cdd6f4" font-size="16">:1:11</text>
+    <text x="926" y="300" fill="#cdd6f4" font-size="16">1 │ timeout = 2x</text><text x="1040" y="330" fill="#f38ba8" font-size="16">^^</text>
+    <text x="926" y="390" fill="#a6e3a1" font-size="16">help:</text><text x="926" y="422" fill="#cdd6f4" font-size="16">try timeout = 2m</text>
+    <text x="926" y="478" fill="#6c7086" font-size="14">full RGB + clickable source</text>
+  </g>
+</svg>
