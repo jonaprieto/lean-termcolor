@@ -46,19 +46,7 @@ theorem join_append (left right : List String) :
   simp [String.join, List.foldl_append, foldl_append_left (left.foldl (· ++ ·) "")]
 
 theorem render_plain (text : Text) : Text.render .plain text = text.plainText := by
-  have wrap_plain (segment : Segment) :
-      Style.wrap .plain segment.style segment.text = segment.text := by
-    by_cases h : segment.text.isEmpty = true
-    · have hsize : segment.text.utf8ByteSize = 0 := by
-        simpa [String.isEmpty] using h
-      have hempty : segment.text = "" := String.utf8ByteSize_eq_zero_iff.mp hsize
-      simp [Style.wrap, String.isEmpty, hempty]
-    · have hne : segment.text ≠ "" := by
-        intro hempty
-        apply h
-        simp [String.isEmpty, hempty]
-      simp [Style.wrap, Style.sgr, Style.sgrParameters, RenderTarget.plain, String.isEmpty, hne]
-  simp [Text.render, Text.plainText, wrap_plain]
+  simp [Text.render, Text.plainText, Text.renderSegment_plain]
 
 theorem concat_append (left right : List Text) :
     Text.concat (left ++ right) = Text.concat left ++ Text.concat right := by

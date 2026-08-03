@@ -76,6 +76,7 @@ private def demo (target : RenderTarget) : Text := Text.concat
   , heading "target"
   , row "detected" [Text.plain (levelName target.colors)]
   , row "styles" [Text.plain (if target.styles then "enabled" else "disabled")]
+  , row "links" [Text.plain (if target.hyperlinks then "OSC-8 enabled" else "disabled")]
   , Text.styled "\nNO_COLOR=1 or a pipe strips every escape above.\n"
       (Style.dim <+> Style.fg demoPalette.comment)
   ]

@@ -70,4 +70,16 @@ theorem ansi16_render_wraps_red :
     Text.render RenderTarget.ansi16 (Text.styled "a" Style.red) = "\u001b[31ma\u001b[0m" := by
   decide
 
+theorem plain_target_suppresses_hyperlinks :
+    Text.render RenderTarget.plain
+        (Text.hyperlink "file:///tmp/settings.toml" (Text.plain "settings.toml")) =
+      "settings.toml" := by
+  decide
+
+theorem hyperlink_target_emits_osc8 :
+    Text.render (RenderTarget.withHyperlinks RenderTarget.plain)
+        (Text.hyperlink "file:///tmp/settings.toml" (Text.plain "settings.toml")) =
+      "\u001b]8;;file:///tmp/settings.toml\u001b\\settings.toml\u001b]8;;\u001b\\" := by
+  native_decide
+
 end TermColor

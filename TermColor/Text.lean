@@ -19,6 +19,7 @@ namespace TermColor
 structure Segment where
   text : String
   style : Style := {}
+  link : Option String := none
   deriving BEq, DecidableEq, Repr
 
 /-- Text with styles attached to segments. -/
@@ -35,6 +36,10 @@ def plain (text : String) : Text := { segments := [{ text := text }] }
 
 /-- Text with one style overlay. -/
 def styled (text : String) (style : Style) : Text := { segments := [{ text, style }] }
+
+/-- Attach a terminal hyperlink to all segments in a text value. -/
+def hyperlink (uri : String) (text : Text) : Text :=
+  { segments := text.segments.map fun segment => { segment with link := some uri } }
 
 /-- Append two text values without changing their styles. -/
 def append (left right : Text) : Text := { segments := left.segments ++ right.segments }
@@ -63,8 +68,32 @@ def plainText (text : Text) : String :=
   String.join (text.segments.map fun segment => segment.text)
 
 /-- Render styled text for an explicit terminal target. -/
+private def safeUri (uri : String) : Bool :=
+  !uri.contains "\u001b" && !uri.contains "\u0007"
+
+def renderSegment (target : RenderTarget) (segment : Segment) : String :=
+  let content := segment.style.wrap target segment.text
+  match segment.link with
+  | some uri =>
+      if target.hyperlinks && safeUri uri then
+        "\u001b]8;;" ++ uri ++ "\u001b\\" ++ content ++ "\u001b]8;;\u001b\\"
+      else
+        content
+  | none => content
+
+/-- Plain targets preserve text and suppress both styles and hyperlinks. -/
+@[simp] theorem renderSegment_plain (segment : Segment) :
+    renderSegment RenderTarget.plain segment = segment.text := by
+  cases segment with
+  | mk text style link =>
+      cases link <;>
+        by_cases h : text = "" <;>
+          simp [h, renderSegment, RenderTarget.plain, Style.wrap, Style.sgr,
+            Style.sgrParameters, String.isEmpty]
+
+/-- Render styled text, optionally emitting OSC-8 hyperlinks for linked segments. -/
 def render (target : RenderTarget) (text : Text) : String :=
-  String.join (text.segments.map (fun segment => segment.style.wrap target segment.text))
+  String.join (text.segments.map fun segment => renderSegment target segment)
 
 end Text
 

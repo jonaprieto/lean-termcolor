@@ -11,7 +11,7 @@ import TermColor.Style
 
 This module has no terminal detection and performs no IO. A `RenderTarget` makes the fallback
 policy explicit, so the same styled value can be rendered as plain text, ANSI-16, ANSI-256, or
-true color.
+true color, with optional OSC-8 hyperlinks.
 -/
 
 namespace TermColor
@@ -20,6 +20,7 @@ namespace TermColor
 structure RenderTarget where
   styles : Bool := true
   colors : ColorLevel := .trueColor
+  hyperlinks : Bool := false
   deriving BEq, DecidableEq, Repr
 
 namespace RenderTarget
@@ -28,6 +29,10 @@ def plain : RenderTarget := { styles := false, colors := .none }
 def ansi16 : RenderTarget := { styles := true, colors := .ansi16 }
 def ansi256 : RenderTarget := { styles := true, colors := .ansi256 }
 def trueColor : RenderTarget := { styles := true, colors := .trueColor }
+
+/-- Enable OSC-8 hyperlinks while preserving the target's color and style policy. -/
+def withHyperlinks (target : RenderTarget) : RenderTarget :=
+  { target with hyperlinks := true }
 
 end RenderTarget
 

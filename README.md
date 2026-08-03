@@ -65,6 +65,8 @@ Use `Text.render` when the output target is known. Import `TermColor.Detect` and
 - `Text.styled "warning" Style.yellow ++ Text.plain "!"` preserves text order and style
   boundaries.
 - `RenderTarget.plain`, `.ansi16`, `.ansi256`, and `.trueColor` make fallback behavior explicit.
+- `Text.hyperlink "file:///tmp/settings.toml" content` adds an OSC-8 link when rendered with
+  `RenderTarget.withHyperlinks`; plain targets keep only the visible text.
 
 RGB fallback uses the conventional xterm palette. A terminal may let users redefine that palette,
 so exact RGB output requires `RenderTarget.trueColor`.
@@ -78,6 +80,13 @@ explicit overrides, except that `NO_COLOR` and `TERM=dumb` remain safety wins.
 
 Pass an explicit `RenderTarget` when the caller knows more about the destination than environment
 detection can determine.
+
+## Clickable locations
+
+OSC-8 is supported by many modern terminals, including hyperlinks in source locations. The
+terminal must receive an absolute URI, for example `file:///tmp/settings.toml`; terminal support
+varies, and unsupported terminals simply display the styled text. This package never enables
+links automatically: callers opt in with `RenderTarget.withHyperlinks`.
 
 ## Build and development
 
