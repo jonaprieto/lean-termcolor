@@ -47,11 +47,7 @@ For deterministic output, render the same value with an explicit target:
 #eval Text.render RenderTarget.ansi16 message
 ```
 
-The visual gallery shows the same pure `Text` value across styles and terminal targets:
-
-![termcolor styled text](assets/termcolor-hero.svg)
-
-![termcolor terminal targets](assets/termcolor-targets.svg)
+The same pure `Text` value can be rendered across styles and terminal targets:
 
 Use `Text.render` when the output target is known. Import `TermColor.Detect` and use
 `TermColor.print` when the library should choose a target from the environment.
