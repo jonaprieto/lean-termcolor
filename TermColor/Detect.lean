@@ -54,16 +54,17 @@ def targetWithTty (choice : ColorChoice := .auto) (tty : Bool) : IO RenderTarget
   let colorterm := colorterm.filter (· != "")
   let level := detectedLevel term colorterm
   let forced := choice == .always || forceColor
+  let hyperlinks := tty && choice != .never && !dumbTerm term
   if choice == .never then
     pure .plain
   else if dumbTerm term then
     pure .plain
   else if noColor then
-    pure { styles := tty, colors := .none }
+    pure { styles := tty, colors := .none, hyperlinks }
   else if forced then
-    pure { styles := true, colors := level }
+    pure { styles := true, colors := level, hyperlinks }
   else if tty then
-    pure { styles := true, colors := level }
+    pure { styles := true, colors := level, hyperlinks }
   else
     pure .plain
 

@@ -72,9 +72,9 @@ so exact RGB output requires `RenderTarget.trueColor`.
 ## Automatic output
 
 `TermColor.Detect` is conservative: redirected output is plain by default, while active terminals
-receive ANSI output. A non-empty `NO_COLOR` disables colors and `FORCE_COLOR` but retains text
-attributes on a TTY; `TERM=dumb` disables all styling. `ColorChoice.always` and `.never` are
-explicit overrides, except that `NO_COLOR` and `TERM=dumb` remain safety wins.
+receive ANSI output and OSC-8 hyperlinks. A non-empty `NO_COLOR` disables colors and `FORCE_COLOR`
+but retains text attributes and links on a TTY; `TERM=dumb` disables all styling. `ColorChoice.always`
+and `.never` are explicit overrides, except that `NO_COLOR` and `TERM=dumb` remain safety wins.
 
 Pass an explicit `RenderTarget` when the caller knows more about the destination than environment
 detection can determine.
@@ -83,8 +83,9 @@ detection can determine.
 
 OSC-8 is supported by many modern terminals, including hyperlinks in source locations. The
 terminal must receive an absolute URI, for example `file:///tmp/settings.toml`; terminal support
-varies, and unsupported terminals simply display the styled text. This package never enables
-links automatically: callers opt in with `RenderTarget.withHyperlinks`.
+varies, and unsupported terminals simply display the styled text. Automatic terminal detection
+enables links on active terminals; callers using an explicit `RenderTarget` can opt in with
+`RenderTarget.withHyperlinks`.
 
 ## Build and development
 
