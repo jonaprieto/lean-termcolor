@@ -56,6 +56,6 @@ theorem concat_append (left right : List Text) :
 theorem render_append (target : RenderTarget) (left right : Text) :
     Text.render target (left ++ right) = Text.render target left ++ Text.render target right := by
   change Text.render target (Text.append left right) = _
-  simp [Text.render, Text.append, List.map_append, join_append]
+  simp [Text.render, Text.append, List.map_append]
 
 end TermColor
