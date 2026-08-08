@@ -17,17 +17,29 @@ namespace TermColor
 
 /-- Semantic colors shared by the built-in terminal palettes. -/
 structure ColorScheme where
+  /-- Background color. -/
   background : Color
+  /-- Primary foreground color. -/
   foreground : Color
+  /-- Selection color. -/
   selection : Color
+  /-- Comment color. -/
   comment : Color
+  /-- Error or danger color. -/
   red : Color
+  /-- Orange accent color. -/
   orange : Color
+  /-- Warning color. -/
   yellow : Color
+  /-- Success color. -/
   green : Color
+  /-- Cyan accent color. -/
   cyan : Color
+  /-- Blue accent color. -/
   blue : Color
+  /-- Purple accent color. -/
   purple : Color
+  /-- Pink accent color. -/
   pink : Color
   deriving BEq, DecidableEq, Repr
 

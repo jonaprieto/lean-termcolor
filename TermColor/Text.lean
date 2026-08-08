@@ -17,18 +17,23 @@ namespace TermColor
 
 /-- One piece of text with one style overlay. -/
 structure Segment where
+  /-- Visible text in the segment. -/
   text : String
+  /-- Style applied to the segment. -/
   style : Style := {}
+  /-- Optional OSC-8 hyperlink URI. -/
   link : Option String := none
   deriving BEq, DecidableEq, Repr
 
 /-- Text with styles attached to segments. -/
 structure Text where
+  /-- Ordered styled segments. -/
   segments : List Segment := []
   deriving BEq, DecidableEq, Repr
 
 namespace Text
 
+/-- An empty text value. -/
 def empty : Text := {}
 
 /-- Unstyled text. -/
@@ -71,6 +76,7 @@ def plainText (text : Text) : String :=
 private def safeUri (uri : String) : Bool :=
   !uri.contains "\u001b" && !uri.contains "\u0007"
 
+/-- Render one segment for a terminal target. -/
 def renderSegment (target : RenderTarget) (segment : Segment) : String :=
   let content := segment.style.wrap target segment.text
   match segment.link with

@@ -18,16 +18,23 @@ namespace TermColor
 
 /-- Whether styles are emitted, and how much color precision is available. -/
 structure RenderTarget where
+  /-- Whether SGR styles are emitted. -/
   styles : Bool := true
+  /-- Maximum color precision available to the renderer. -/
   colors : ColorLevel := .trueColor
+  /-- Whether OSC-8 hyperlinks are emitted. -/
   hyperlinks : Bool := false
   deriving BEq, DecidableEq, Repr
 
 namespace RenderTarget
 
+/-- A plain-text target with no styles or colors. -/
 def plain : RenderTarget := { styles := false, colors := .none }
+/-- An ANSI-16 target. -/
 def ansi16 : RenderTarget := { styles := true, colors := .ansi16 }
+/-- An xterm 256-color target. -/
 def ansi256 : RenderTarget := { styles := true, colors := .ansi256 }
+/-- A true-color target. -/
 def trueColor : RenderTarget := { styles := true, colors := .trueColor }
 
 /-- Enable OSC-8 hyperlinks while preserving the target's color and style policy. -/
@@ -36,9 +43,10 @@ def withHyperlinks (target : RenderTarget) : RenderTarget :=
 
 end RenderTarget
 
+/-- The SGR layer to which a color is applied. -/
 inductive Layer where
-  | foreground
-  | background
+  | /-- The foreground SGR layer. -/ foreground
+  | /-- The background SGR layer. -/ background
   deriving BEq, DecidableEq, Repr
 
 namespace Color
