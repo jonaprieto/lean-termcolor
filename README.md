@@ -9,6 +9,8 @@
 ANSI colors and styled text for Lean 4. `Text` is pure data; terminal IO is provided by the
 optional detection and terminal packages.
 
+<p align="center"><img src="docs/assets/termcolor.png" alt="TermColor demo" width="720"></p>
+
 ## Install
 
 ```lean
