@@ -17,10 +17,11 @@ part of the pure rendering model, so callers can always pass an explicit `Render
 
 namespace TermColor
 
+/-- Policy for choosing whether to emit terminal colors. -/
 inductive ColorChoice where
-  | auto
-  | always
-  | never
+  | /-- Detect the environment and TTY status. -/ auto
+  | /-- Force styled output when supported. -/ always
+  | /-- Force plain output. -/ never
   deriving BEq, DecidableEq, Repr
 
 private def nonEmpty (value : Option String) : Bool :=

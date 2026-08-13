@@ -2,8 +2,9 @@ import Lake
 open Lake DSL
 
 package «termcolor» where
-  version := v!"1.1.2"
-  leanOptions := #[⟨`autoImplicit, false⟩, ⟨`relaxedAutoImplicit, false⟩]
+  version := v!"1.1.3"
+  leanOptions := #[⟨`autoImplicit, false⟩, ⟨`relaxedAutoImplicit, false⟩,
+    ⟨`linter.missingDocs, true⟩]
 
 @[default_target]
 lean_lib «TermColor» where
@@ -16,6 +17,11 @@ lean_lib «TermColor» where
 
 lean_lib «TermColor.Properties» where
   globs := #[.andSubmodules `TermColor.Properties]
+
+@[test_driver]
+lean_exe «tests» where
+  root := `Tests
+  srcDir := "test"
 
 lean_exe «demo» where
   root := `Demo

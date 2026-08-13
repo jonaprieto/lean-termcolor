@@ -20,43 +20,64 @@ namespace TermColor
 
 /-- The eight ANSI color names. -/
 inductive BasicColor where
-  | black | red | green | yellow | blue | magenta | cyan | white
+  | /-- Black. -/ black
+  | /-- Red. -/ red
+  | /-- Green. -/ green
+  | /-- Yellow. -/ yellow
+  | /-- Blue. -/ blue
+  | /-- Magenta. -/ magenta
+  | /-- Cyan. -/ cyan
+  | /-- White. -/ white
   deriving BEq, DecidableEq, Repr
 
 /-- The two intensities of the eight ANSI colors. -/
 inductive Intensity where
-  | normal
-  | bright
+  | /-- Normal intensity. -/ normal
+  | /-- Bright intensity. -/ bright
   deriving BEq, DecidableEq, Repr
 
 /-- A color that can be represented by ANSI SGR color parameters. -/
 inductive Color where
-  | default
-  | ansi : Intensity → BasicColor → Color
-  | indexed : UInt8 → Color
-  | rgb : UInt8 → UInt8 → UInt8 → Color
+  | /-- The terminal's configured default color. -/ default
+  | /-- An ANSI basic color at the given intensity. -/ ansi : Intensity → BasicColor → Color
+  | /-- An xterm 256-color palette index. -/ indexed : UInt8 → Color
+  | /-- An explicit red, green, and blue color. -/ rgb : UInt8 → UInt8 → UInt8 → Color
   deriving BEq, DecidableEq, Repr
 
 namespace Color
 
 /-- The ordinary ANSI colors. -/
 def black : Color := .ansi .normal .black
+/-- The ordinary red ANSI color. -/
 def red : Color := .ansi .normal .red
+/-- The ordinary green ANSI color. -/
 def green : Color := .ansi .normal .green
+/-- The ordinary yellow ANSI color. -/
 def yellow : Color := .ansi .normal .yellow
+/-- The ordinary blue ANSI color. -/
 def blue : Color := .ansi .normal .blue
+/-- The ordinary magenta ANSI color. -/
 def magenta : Color := .ansi .normal .magenta
+/-- The ordinary cyan ANSI color. -/
 def cyan : Color := .ansi .normal .cyan
+/-- The ordinary white ANSI color. -/
 def white : Color := .ansi .normal .white
 
-/-- The bright ANSI colors. -/
+/-- The bright black ANSI color. -/
 def brightBlack : Color := .ansi .bright .black
+/-- The bright red ANSI color. -/
 def brightRed : Color := .ansi .bright .red
+/-- The bright green ANSI color. -/
 def brightGreen : Color := .ansi .bright .green
+/-- The bright yellow ANSI color. -/
 def brightYellow : Color := .ansi .bright .yellow
+/-- The bright blue ANSI color. -/
 def brightBlue : Color := .ansi .bright .blue
+/-- The bright magenta ANSI color. -/
 def brightMagenta : Color := .ansi .bright .magenta
+/-- The bright cyan ANSI color. -/
 def brightCyan : Color := .ansi .bright .cyan
+/-- The bright white ANSI color. -/
 def brightWhite : Color := .ansi .bright .white
 
 /-- The fully saturated, full-brightness color at a hue given in degrees.
@@ -182,10 +203,10 @@ end Color
 
 /-- The color precision a terminal can receive through SGR. -/
 inductive ColorLevel where
-  | none
-  | ansi16
-  | ansi256
-  | trueColor
+  | /-- Do not emit color codes. -/ none
+  | /-- Emit the ANSI-16 palette. -/ ansi16
+  | /-- Emit the xterm 256-color palette. -/ ansi256
+  | /-- Emit 24-bit RGB colors. -/ trueColor
   deriving BEq, DecidableEq, Repr
 
 end TermColor
