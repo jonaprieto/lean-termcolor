@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.4 — 2026-08-13
+
+- Publish the dependency-graph README cleanup.
+
 ## 1.1.3 — 2026-08-13
 
 - Enforce public documentation and Lake test-driver gates.
