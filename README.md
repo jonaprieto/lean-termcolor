@@ -1,7 +1,9 @@
 # termcolor
 
 [![CI](https://github.com/jonaprieto/lean-termcolor/actions/workflows/ci.yml/badge.svg)](https://github.com/jonaprieto/lean-termcolor/actions/workflows/ci.yml)
-[![Lean 4](https://img.shields.io/badge/Lean%204-library-5f5f5f)](lean-toolchain)
+[![Release](https://img.shields.io/github/v/release/jonaprieto/lean-termcolor?display_name=tag&sort=semver)](https://github.com/jonaprieto/lean-termcolor/releases)
+[![Lean 4](https://img.shields.io/badge/Lean%204-v4.33.0-6f42c1)](lean-toolchain)
+[![Docs](https://img.shields.io/badge/docs-GitHub%20Pages-4c8bf5)](https://jonaprieto.github.io/lean-termcolor/)
 [![License](https://img.shields.io/badge/license-Apache--2.0-green)](LICENSE)
 
 ANSI colors and styled text for Lean 4. `Text` is pure data; terminal IO is provided by the
@@ -11,7 +13,7 @@ optional detection and terminal packages.
 
 ```lean
 require termcolor from git
-  "https://github.com/jonaprieto/lean-termcolor.git" @ "v1.1.0"
+  "https://github.com/jonaprieto/lean-termcolor.git" @ "v1.1.2"
 ```
 
 ## Quick start
