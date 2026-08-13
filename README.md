@@ -47,7 +47,9 @@ lake exe demo
 
 [`termcolor-layout`](https://github.com/jonaprieto/lean-termcolor-layout) provides layout;
 [`termcolor-widgets`](https://github.com/jonaprieto/lean-termcolor-widgets) provides pure views;
-[`termcolor-terminal`](https://github.com/jonaprieto/lean-termcolor-terminal) provides terminal IO.
+[`termcolor-terminal`](https://github.com/jonaprieto/lean-termcolor-terminal) provides terminal IO;
+[`lean-argus`](https://github.com/jonaprieto/lean-argus) and [`oatp`](https://github.com/jonaprieto/oatp)
+use the foundation.
 
 ## License
 
