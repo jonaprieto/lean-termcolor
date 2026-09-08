@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.6 — 2026-09-08
+
+- Support Lean v4.33.1 and clarify AI-assisted development.
+
 ## 1.1.5 — 2026-08-13
 
 - Add the standard review guidance to the README.
