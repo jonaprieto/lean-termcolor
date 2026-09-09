@@ -9,6 +9,11 @@
 ANSI colors and styled text for Lean 4. `Text` is pure data; terminal IO is provided by the
 optional detection and terminal packages.
 
+## Problem
+
+Terminal formatting should be composable as data without forcing applications to emit escape codes
+or perform terminal IO.
+
 <p align="center"><img src="docs/assets/termcolor.png" alt="TermColor demo" width="720"></p>
 
 ## Development
