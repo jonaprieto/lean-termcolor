@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.7 — 2026-09-09
+
+- Document the contribution policy and package problem.
+
 ## 1.1.6 — 2026-09-08
 
 - Support Lean v4.33.1 and clarify AI-assisted development.
