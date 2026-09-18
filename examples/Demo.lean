@@ -35,17 +35,13 @@ def bar
     : Text :=
   Text.perChar ("".pushn ' ' count) fun i n => Style.bg (color i n)
 
-private
-def attributes
-    : List (String × Style) :=
+private def attributes : List (String × Style) :=
   [ ("bold", Style.bold), ("dim", Style.dim), ("italic", Style.italic)
   , ("underline", Style.underline), ("double", Style.doubleUnderline)
   , ("blink", Style.blink), ("reverse", Style.reverse), ("strike", Style.strike)
   , ("overline", Style.overlined), ("framed", Style.framed), ("conceal", Style.conceal) ]
 
-private
-def basics
-    : List (String × BasicColor) :=
+private def basics : List (String × BasicColor) :=
   [ ("black", .black), ("red", .red), ("green", .green), ("yellow", .yellow)
   , ("blue", .blue), ("magenta", .magenta), ("cyan", .cyan), ("white", .white) ]
 
