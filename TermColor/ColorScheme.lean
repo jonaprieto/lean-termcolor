@@ -46,9 +46,7 @@ structure ColorScheme where
 namespace ColorScheme
 
 /-- Catppuccin Mocha. -/
-def catppuccin
-    : ColorScheme
-    where
+def catppuccin : ColorScheme where
   background := .rgb 30 30 46
   foreground := .rgb 205 214 244
   selection := .rgb 88 91 112
@@ -63,9 +61,7 @@ def catppuccin
   pink := .rgb 245 194 231
 
 /-- The official Dracula palette. -/
-def dracula
-    : ColorScheme
-    where
+def dracula : ColorScheme where
   background := .rgb 40 42 54
   foreground := .rgb 248 248 242
   selection := .rgb 68 71 90
@@ -80,9 +76,7 @@ def dracula
   pink := .rgb 255 121 198
 
 /-- The classic Monokai palette. -/
-def monokai
-    : ColorScheme
-    where
+def monokai : ColorScheme where
   background := .rgb 39 40 34
   foreground := .rgb 248 248 242
   selection := .rgb 73 72 62
