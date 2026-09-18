@@ -17,14 +17,16 @@ private def demoPalette : ColorScheme := ColorScheme.catppuccin
 private
 def label
     (name : String)
-    : Text :=
+    : Text
+    :=
   Text.styled (name ++ "".pushn ' ' (11 - name.length)) (Style.fg demoPalette.comment)
 
 private
 def row
     (name : String)
     (cells : List Text)
-    : Text :=
+    : Text
+    :=
   label name ++ Text.concat cells ++ Text.plain "\n"
 
 /-- A row of colored blocks, `count` wide. -/
@@ -32,7 +34,8 @@ private
 def bar
     (count : Nat)
     (color : Nat → Nat → Color)
-    : Text :=
+    : Text
+    :=
   Text.perChar ("".pushn ' ' count) fun i n => Style.bg (color i n)
 
 private def attributes : List (String × Style) :=
@@ -48,7 +51,8 @@ private def basics : List (String × BasicColor) :=
 private
 def words
     (cells : List Text)
-    : List Text :=
+    : List Text
+    :=
   cells.map (· ++ Text.plain " ")
 
 private
@@ -63,7 +67,8 @@ def levelName
 private
 def heading
     (title : String)
-    : Text :=
+    : Text
+    :=
   Text.plain "\n" ++
     Text.styled title (Style.bold <+> Style.fg demoPalette.foreground) ++ Text.plain "\n"
 

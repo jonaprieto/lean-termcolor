@@ -62,7 +62,8 @@ private
 def setAttribute
     (kind : Attribute)
     (enabled : Bool)
-    : Style :=
+    : Style
+    :=
   { settings := [.attr kind enabled] }
 
 /-- A foreground-color setting. -/

@@ -46,7 +46,8 @@ def styled (text : String) (style : Style) : Text := { segments := [{ text, styl
 def hyperlink
     (uri : String)
     (text : Text)
-    : Text :=
+    : Text
+    :=
   { segments := text.segments.map fun segment => { segment with link := some uri } }
 
 /-- Append two text values without changing their styles. -/
@@ -65,7 +66,8 @@ def concat (texts : List Text) : Text := { segments := texts.flatMap (·.segment
 def perChar
     (text : String)
     (style : Nat → Nat → Style)
-    : Text :=
+    : Text
+    :=
   let chars := text.toList
   let count := chars.length
   { segments := chars.mapIdx fun i c => { text := c.toString, style := style i count } }
@@ -73,27 +75,31 @@ def perChar
 /-- Sweep the hue wheel across the characters of a string. -/
 def rainbow
     (text : String)
-    : Text :=
+    : Text
+    :=
   perChar text fun i n => Style.fg (Color.hue (i * 330 / max n 1))
 
 /-- Remove all ANSI styling while preserving the visible text. -/
 def plainText
     (text : Text)
-    : String :=
+    : String
+    :=
   String.join (text.segments.map fun segment => segment.text)
 
 /-- Render styled text for an explicit terminal target. -/
 private
 def safeUri
     (uri : String)
-    : Bool :=
+    : Bool
+    :=
   !uri.contains "\u001b" && !uri.contains "\u0007"
 
 /-- Render one segment for a terminal target. -/
 def renderSegment
     (target : RenderTarget)
     (segment : Segment)
-    : String :=
+    : String
+    :=
   let content := segment.style.wrap target segment.text
   match segment.link with
   | some uri =>
@@ -117,7 +123,8 @@ def renderSegment
 def render
     (target : RenderTarget)
     (text : Text)
-    : String :=
+    : String
+    :=
   String.join (text.segments.map fun segment => renderSegment target segment)
 
 end Text
