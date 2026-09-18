@@ -38,7 +38,9 @@ def ansi256 : RenderTarget := { styles := true, colors := .ansi256 }
 def trueColor : RenderTarget := { styles := true, colors := .trueColor }
 
 /-- Enable OSC-8 hyperlinks while preserving the target's color and style policy. -/
-def withHyperlinks (target : RenderTarget) : RenderTarget :=
+def withHyperlinks
+    (target : RenderTarget)
+    : RenderTarget :=
   { target with hyperlinks := true }
 
 end RenderTarget
@@ -51,7 +53,11 @@ inductive Layer where
 
 namespace Color
 
-private def ansiCode (layer : Layer) (index : UInt8) : Nat :=
+private
+def ansiCode
+    (layer : Layer)
+    (index : UInt8)
+    : Nat :=
   if index < 8 then
     let base := match layer with | .foreground => 30 | .background => 40
     base + index.toNat
@@ -59,15 +65,26 @@ private def ansiCode (layer : Layer) (index : UInt8) : Nat :=
     let base := match layer with | .foreground => 90 | .background => 100
     base + index.toNat - 8
 
-private def defaultCode : Layer → Nat
+private
+def defaultCode
+    : Layer →
+      Nat
   | .foreground => 39
   | .background => 49
 
-private def ansi16Codes (layer : Layer) : Color → List Nat
+private
+def ansi16Codes
+    (layer : Layer)
+    : Color →
+      List Nat
   | .default => [defaultCode layer]
   | color => [ansiCode layer (color.toAnsi16.getD 0)]
 
-private def ansi256Codes (layer : Layer) : Color → List Nat
+private
+def ansi256Codes
+    (layer : Layer)
+    : Color →
+      List Nat
   | .default => [defaultCode layer]
   | .ansi intensity basic =>
       let i := ansiIndex intensity basic
@@ -78,7 +95,11 @@ private def ansi256Codes (layer : Layer) : Color → List Nat
       | .foreground => [38, 5, i.toNat]
       | .background => [48, 5, i.toNat]
 
-private def trueColorCodes (layer : Layer) : Color → List Nat
+private
+def trueColorCodes
+    (layer : Layer)
+    : Color →
+      List Nat
   | .default => [defaultCode layer]
   | .ansi intensity basic =>
       let i := ansiIndex intensity basic
@@ -93,7 +114,11 @@ private def trueColorCodes (layer : Layer) : Color → List Nat
       | .background => [48, 2, r.toNat, g.toNat, b.toNat]
 
 /-- Encode a color for one SGR layer at a given terminal color level. -/
-def sgrCodes (layer : Layer) (level : ColorLevel) (color : Color) : List Nat :=
+def sgrCodes
+    (layer : Layer)
+    (level : ColorLevel)
+    (color : Color)
+    : List Nat :=
   match level with
   | .none => []
   | .ansi16 => ansi16Codes layer color
@@ -104,7 +129,11 @@ end Color
 
 namespace Style
 
-private def attributeCodes : Attribute → Bool → List Nat
+private
+def attributeCodes
+    : Attribute →
+      Bool →
+      List Nat
   | .bold, true => [1]
   | .bold, false => [22]
   | .dim, true => [2]
@@ -132,22 +161,35 @@ private def attributeCodes : Attribute → Bool → List Nat
   | .overlined, true => [53]
   | .overlined, false => [55]
 
-private def settingCodes (target : RenderTarget) : Setting → List Nat
+private
+def settingCodes
+    (target : RenderTarget)
+    : Setting →
+      List Nat
   | .foreground color => Color.sgrCodes .foreground target.colors color
   | .background color => Color.sgrCodes .background target.colors color
   | .attr kind enabled => attributeCodes kind enabled
 
-private def codesToString (codes : List Nat) : String :=
+private
+def codesToString
+    (codes : List Nat)
+    : String :=
   String.intercalate ";" (codes.map toString)
 
 /-- The SGR parameter string for a style at a target capability. -/
-def sgrParameters (target : RenderTarget) (style : Style) : List Nat :=
+def sgrParameters
+    (target : RenderTarget)
+    (style : Style)
+    : List Nat :=
   if !target.styles then []
   else
     style.settings.flatMap (settingCodes target)
 
 /-- Encode a style as an SGR opening sequence. -/
-def sgr (target : RenderTarget) (style : Style) : String :=
+def sgr
+    (target : RenderTarget)
+    (style : Style)
+    : String :=
   let codes := sgrParameters target style
   if codes.isEmpty then ""
   else "\u001b[" ++ codesToString codes ++ "m"
@@ -156,7 +198,11 @@ def sgr (target : RenderTarget) (style : Style) : String :=
 def reset : String := "\u001b[0m"
 
 /-- Wrap plain text in an opening SGR sequence and a complete reset. -/
-def wrap (target : RenderTarget) (style : Style) (text : String) : String :=
+def wrap
+    (target : RenderTarget)
+    (style : Style)
+    (text : String)
+    : String :=
   if text.isEmpty then ""
   else
     let opening := sgr target style

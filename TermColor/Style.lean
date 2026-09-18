@@ -58,7 +58,11 @@ def combine (old new : Style) : Style := { settings := old.settings ++ new.setti
 /-- Combine styles, applying the right-hand settings after the left-hand settings. -/
 scoped infixl:65 " <+> " => combine
 
-private def setAttribute (kind : Attribute) (enabled : Bool) : Style :=
+private
+def setAttribute
+    (kind : Attribute)
+    (enabled : Bool)
+    : Style :=
   { settings := [.attr kind enabled] }
 
 /-- A foreground-color setting. -/
