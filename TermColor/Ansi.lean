@@ -40,7 +40,8 @@ def trueColor : RenderTarget := { styles := true, colors := .trueColor }
 /-- Enable OSC-8 hyperlinks while preserving the target's color and style policy. -/
 def withHyperlinks
     (target : RenderTarget)
-    : RenderTarget :=
+    : RenderTarget
+    :=
   { target with hyperlinks := true }
 
 end RenderTarget
@@ -57,7 +58,8 @@ private
 def ansiCode
     (layer : Layer)
     (index : UInt8)
-    : Nat :=
+    : Nat
+    :=
   if index < 8 then
     let base := match layer with | .foreground => 30 | .background => 40
     base + index.toNat
@@ -118,7 +120,8 @@ def sgrCodes
     (layer : Layer)
     (level : ColorLevel)
     (color : Color)
-    : List Nat :=
+    : List Nat
+    :=
   match level with
   | .none => []
   | .ansi16 => ansi16Codes layer color
@@ -173,14 +176,16 @@ def settingCodes
 private
 def codesToString
     (codes : List Nat)
-    : String :=
+    : String
+    :=
   String.intercalate ";" (codes.map toString)
 
 /-- The SGR parameter string for a style at a target capability. -/
 def sgrParameters
     (target : RenderTarget)
     (style : Style)
-    : List Nat :=
+    : List Nat
+    :=
   if !target.styles then []
   else
     style.settings.flatMap (settingCodes target)
@@ -189,7 +194,8 @@ def sgrParameters
 def sgr
     (target : RenderTarget)
     (style : Style)
-    : String :=
+    : String
+    :=
   let codes := sgrParameters target style
   if codes.isEmpty then ""
   else "\u001b[" ++ codesToString codes ++ "m"
@@ -202,7 +208,8 @@ def wrap
     (target : RenderTarget)
     (style : Style)
     (text : String)
-    : String :=
+    : String
+    :=
   if text.isEmpty then ""
   else
     let opening := sgr target style

@@ -87,7 +87,8 @@ maximum, which is what gradients and rainbows want; for anything else build `.rg
 -/
 def hue
     (degrees : Nat)
-    : Color :=
+    : Color
+    :=
   let ramp : UInt8 := UInt8.ofNat (degrees % 60 * 255 / 60)
   match (degrees / 60) % 6 with
   | 0 => .rgb 255 ramp 0
@@ -143,14 +144,16 @@ def ansi16Rgb
 private
 def absDiff
     (left right : Nat)
-    : Nat :=
+    : Nat
+    :=
   if left < right then right - left else left - right
 
 private
 def distance
     (r g b : Nat)
     (palette : Nat × Nat × Nat)
-    : Nat :=
+    : Nat
+    :=
   let dr := absDiff r palette.1
   let dg := absDiff g palette.2.1
   let db := absDiff b palette.2.2
@@ -159,7 +162,8 @@ def distance
 private
 def nearestAnsi16
     (r g b : Nat)
-    : UInt8 :=
+    : UInt8
+    :=
   let rec loop (remaining candidate best bestDistance : Nat) : Nat :=
     match remaining with
     | 0 => best
@@ -178,7 +182,8 @@ pure black and white use the exact ANSI-16 endpoints.
 -/
 def rgbToAnsi256
     (r g b : UInt8)
-    : UInt8 :=
+    : UInt8
+    :=
   if r == g && g == b then
     if r.toNat < 8 then 16
     else if r.toNat > 248 then 231
@@ -196,7 +201,8 @@ def cubeChannel
 /-- The conventional RGB value represented by an xterm 256-color index. -/
 def ansi256Rgb
     (index : UInt8)
-    : Nat × Nat × Nat :=
+    : Nat × Nat × Nat
+    :=
   let i := index.toNat
   if i < 16 then ansi16Rgb i
   else if i < 232 then

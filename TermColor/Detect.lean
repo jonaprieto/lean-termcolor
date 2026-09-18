@@ -27,7 +27,8 @@ inductive ColorChoice where
 private
 def nonEmpty
     (value : Option String)
-    : Bool :=
+    : Bool
+    :=
   match value with
   | some value => !value.isEmpty
   | none => false
@@ -35,7 +36,8 @@ def nonEmpty
 private
 def detectedLevel
     (term colorterm : Option String)
-    : ColorLevel :=
+    : ColorLevel
+    :=
   match colorterm with
   | some value =>
       if value == "truecolor" || value == "24bit" then .trueColor
@@ -50,7 +52,8 @@ def detectedLevel
 private
 def dumbTerm
     (term : Option String)
-    : Bool :=
+    : Bool
+    :=
   match term with
   | some "dumb" | some "unknown" => true
   | _ => false
