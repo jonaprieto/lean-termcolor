@@ -43,7 +43,10 @@ def plain (text : String) : Text := { segments := [{ text := text }] }
 def styled (text : String) (style : Style) : Text := { segments := [{ text, style }] }
 
 /-- Attach a terminal hyperlink to all segments in a text value. -/
-def hyperlink (uri : String) (text : Text) : Text :=
+def hyperlink
+    (uri : String)
+    (text : Text)
+    : Text :=
   { segments := text.segments.map fun segment => { segment with link := some uri } }
 
 /-- Append two text values without changing their styles. -/
@@ -59,25 +62,38 @@ instance : Append Text where append := append
 def concat (texts : List Text) : Text := { segments := texts.flatMap (·.segments) }
 
 /-- Style every character of a string from its index and the total character count. -/
-def perChar (text : String) (style : Nat → Nat → Style) : Text :=
+def perChar
+    (text : String)
+    (style : Nat → Nat → Style)
+    : Text :=
   let chars := text.toList
   let count := chars.length
   { segments := chars.mapIdx fun i c => { text := c.toString, style := style i count } }
 
 /-- Sweep the hue wheel across the characters of a string. -/
-def rainbow (text : String) : Text :=
+def rainbow
+    (text : String)
+    : Text :=
   perChar text fun i n => Style.fg (Color.hue (i * 330 / max n 1))
 
 /-- Remove all ANSI styling while preserving the visible text. -/
-def plainText (text : Text) : String :=
+def plainText
+    (text : Text)
+    : String :=
   String.join (text.segments.map fun segment => segment.text)
 
 /-- Render styled text for an explicit terminal target. -/
-private def safeUri (uri : String) : Bool :=
+private
+def safeUri
+    (uri : String)
+    : Bool :=
   !uri.contains "\u001b" && !uri.contains "\u0007"
 
 /-- Render one segment for a terminal target. -/
-def renderSegment (target : RenderTarget) (segment : Segment) : String :=
+def renderSegment
+    (target : RenderTarget)
+    (segment : Segment)
+    : String :=
   let content := segment.style.wrap target segment.text
   match segment.link with
   | some uri =>
@@ -98,7 +114,10 @@ def renderSegment (target : RenderTarget) (segment : Segment) : String :=
             Style.sgrParameters, String.isEmpty]
 
 /-- Render styled text, optionally emitting OSC-8 hyperlinks for linked segments. -/
-def render (target : RenderTarget) (text : Text) : String :=
+def render
+    (target : RenderTarget)
+    (text : Text)
+    : String :=
   String.join (text.segments.map fun segment => renderSegment target segment)
 
 end Text

@@ -85,7 +85,9 @@ def brightWhite : Color := .ansi .bright .white
 The hue wheel wraps, so any `Nat` is a valid argument. Saturation and value are fixed at their
 maximum, which is what gradients and rainbows want; for anything else build `.rgb` directly.
 -/
-def hue (degrees : Nat) : Color :=
+def hue
+    (degrees : Nat)
+    : Color :=
   let ramp : UInt8 := UInt8.ofNat (degrees % 60 * 255 / 60)
   match (degrees / 60) % 6 with
   | 0 => .rgb 255 ramp 0
@@ -95,7 +97,10 @@ def hue (degrees : Nat) : Color :=
   | 4 => .rgb ramp 0 255
   | _ => .rgb 255 0 (255 - ramp)
 
-private def basicIndex : BasicColor → Nat
+private
+def basicIndex
+    : BasicColor →
+      Nat
   | .black => 0
   | .red => 1
   | .green => 2
@@ -106,12 +111,18 @@ private def basicIndex : BasicColor → Nat
   | .white => 7
 
 /-- The xterm index of an ANSI color. -/
-def ansiIndex : Intensity → BasicColor → UInt8
+def ansiIndex
+    : Intensity →
+      BasicColor →
+      UInt8
   | .normal, c => UInt8.ofNat (basicIndex c)
   | .bright, c => UInt8.ofNat (8 + basicIndex c)
 
 /-- The three channels of the conventional xterm ANSI-16 palette. -/
-private def ansi16Rgb : Nat → Nat × Nat × Nat
+private
+def ansi16Rgb
+    : Nat →
+      Nat × Nat × Nat
   | 0  => (0, 0, 0)
   | 1  => (128, 0, 0)
   | 2  => (0, 128, 0)
@@ -129,16 +140,26 @@ private def ansi16Rgb : Nat → Nat × Nat × Nat
   | 14 => (0, 255, 255)
   | _  => (255, 255, 255)
 
-private def absDiff (left right : Nat) : Nat :=
+private
+def absDiff
+    (left right : Nat)
+    : Nat :=
   if left < right then right - left else left - right
 
-private def distance (r g b : Nat) (palette : Nat × Nat × Nat) : Nat :=
+private
+def distance
+    (r g b : Nat)
+    (palette : Nat × Nat × Nat)
+    : Nat :=
   let dr := absDiff r palette.1
   let dg := absDiff g palette.2.1
   let db := absDiff b palette.2.2
   dr * dr + dg * dg + db * db
 
-private def nearestAnsi16 (r g b : Nat) : UInt8 :=
+private
+def nearestAnsi16
+    (r g b : Nat)
+    : UInt8 :=
   let rec loop (remaining candidate best bestDistance : Nat) : Nat :=
     match remaining with
     | 0 => best
@@ -155,7 +176,9 @@ private def channel6 (x : UInt8) : Nat := (x.toNat * 5 + 127) / 255
 The 6×6×6 cube is used for chromatic colors and the 8..238 grayscale ramp for exact grays;
 pure black and white use the exact ANSI-16 endpoints.
 -/
-def rgbToAnsi256 (r g b : UInt8) : UInt8 :=
+def rgbToAnsi256
+    (r g b : UInt8)
+    : UInt8 :=
   if r == g && g == b then
     if r.toNat < 8 then 16
     else if r.toNat > 248 then 231
@@ -163,12 +186,17 @@ def rgbToAnsi256 (r g b : UInt8) : UInt8 :=
   else
     UInt8.ofNat (16 + 36 * channel6 r + 6 * channel6 g + channel6 b)
 
-private def cubeChannel : Nat → Nat
+private
+def cubeChannel
+    : Nat →
+      Nat
   | 0 => 0
   | level => 55 + 40 * level
 
 /-- The conventional RGB value represented by an xterm 256-color index. -/
-def ansi256Rgb (index : UInt8) : Nat × Nat × Nat :=
+def ansi256Rgb
+    (index : UInt8)
+    : Nat × Nat × Nat :=
   let i := index.toNat
   if i < 16 then ansi16Rgb i
   else if i < 232 then
@@ -182,14 +210,18 @@ def ansi256Rgb (index : UInt8) : Nat × Nat × Nat :=
 def rgbToAnsi16 (r g b : UInt8) : UInt8 := nearestAnsi16 r.toNat g.toNat b.toNat
 
 /-- The xterm 256-color index represented by a color when a palette fallback is needed. -/
-def toAnsi256 : Color → Option UInt8
+def toAnsi256
+    : Color →
+      Option UInt8
   | .default => none
   | .ansi i c => some (ansiIndex i c)
   | .indexed i => some i
   | .rgb r g b => some (rgbToAnsi256 r g b)
 
 /-- The ANSI-16 index represented by a color when only the basic palette is available. -/
-def toAnsi16 : Color → Option UInt8
+def toAnsi16
+    : Color →
+      Option UInt8
   | .default => none
   | .ansi i c => some (ansiIndex i c)
   | .indexed i =>

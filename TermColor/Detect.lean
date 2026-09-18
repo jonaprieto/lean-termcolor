@@ -24,12 +24,18 @@ inductive ColorChoice where
   | /-- Force plain output. -/ never
   deriving BEq, DecidableEq, Repr
 
-private def nonEmpty (value : Option String) : Bool :=
+private
+def nonEmpty
+    (value : Option String)
+    : Bool :=
   match value with
   | some value => !value.isEmpty
   | none => false
 
-private def detectedLevel (term colorterm : Option String) : ColorLevel :=
+private
+def detectedLevel
+    (term colorterm : Option String)
+    : ColorLevel :=
   match colorterm with
   | some value =>
       if value == "truecolor" || value == "24bit" then .trueColor
@@ -41,13 +47,19 @@ private def detectedLevel (term colorterm : Option String) : ColorLevel :=
       | some value => if value.endsWith "-256color" then .ansi256 else .ansi16
       | none => .ansi16
 
-private def dumbTerm (term : Option String) : Bool :=
+private
+def dumbTerm
+    (term : Option String)
+    : Bool :=
   match term with
   | some "dumb" | some "unknown" => true
   | _ => false
 
 /-- Choose a render target from the environment and a caller-supplied TTY result. -/
-def targetWithTty (choice : ColorChoice := .auto) (tty : Bool) : IO RenderTarget := do
+def targetWithTty
+    (choice : ColorChoice := .auto)
+    (tty : Bool)
+    : IO RenderTarget := do
   let noColor := nonEmpty (← IO.getEnv "NO_COLOR")
   let forceColor := nonEmpty (← IO.getEnv "FORCE_COLOR")
   let term := ← IO.getEnv "TERM"
@@ -70,15 +82,23 @@ def targetWithTty (choice : ColorChoice := .auto) (tty : Bool) : IO RenderTarget
     pure .plain
 
 /-- Choose a render target from the current process environment and stdout. -/
-def target (choice : ColorChoice := .auto) : IO RenderTarget := do
+def target
+    (choice : ColorChoice := .auto)
+    : IO RenderTarget := do
   targetWithTty choice (← (← IO.getStdout).isTty)
 
 /-- Render text using explicit or automatically detected output policy. -/
-def render (text : Text) (choice : ColorChoice := .auto) : IO String := do
+def render
+    (text : Text)
+    (choice : ColorChoice := .auto)
+    : IO String := do
   pure (Text.render (← target choice) text)
 
 /-- Print text using explicit or automatically detected output policy. -/
-def print (text : Text) (choice : ColorChoice := .auto) : IO Unit := do
+def print
+    (text : Text)
+    (choice : ColorChoice := .auto)
+    : IO Unit := do
   IO.print (← render text choice)
 
 end TermColor
