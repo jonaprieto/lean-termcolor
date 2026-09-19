@@ -62,7 +62,8 @@ def dumbTerm
 def targetWithTty
     (choice : ColorChoice := .auto)
     (tty : Bool)
-    : IO RenderTarget := do
+    : IO RenderTarget
+    := do
   let noColor := nonEmpty (← IO.getEnv "NO_COLOR")
   let forceColor := nonEmpty (← IO.getEnv "FORCE_COLOR")
   let term := ← IO.getEnv "TERM"
@@ -87,21 +88,24 @@ def targetWithTty
 /-- Choose a render target from the current process environment and stdout. -/
 def target
     (choice : ColorChoice := .auto)
-    : IO RenderTarget := do
+    : IO RenderTarget
+    := do
   targetWithTty choice (← (← IO.getStdout).isTty)
 
 /-- Render text using explicit or automatically detected output policy. -/
 def render
     (text : Text)
     (choice : ColorChoice := .auto)
-    : IO String := do
+    : IO String
+    := do
   pure (Text.render (← target choice) text)
 
 /-- Print text using explicit or automatically detected output policy. -/
 def print
     (text : Text)
     (choice : ColorChoice := .auto)
-    : IO Unit := do
+    : IO Unit
+    := do
   IO.print (← render text choice)
 
 end TermColor

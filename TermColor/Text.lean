@@ -110,8 +110,11 @@ def renderSegment
   | none => content
 
 /-- Plain targets preserve text and suppress both styles and hyperlinks. -/
-@[simp] theorem renderSegment_plain (segment : Segment) :
-    renderSegment RenderTarget.plain segment = segment.text := by
+@[simp]
+theorem renderSegment_plain
+    (segment : Segment)
+    : renderSegment RenderTarget.plain segment = segment.text
+    := by
   cases segment with
   | mk text style link =>
       cases link <;>
