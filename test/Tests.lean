@@ -17,6 +17,8 @@ open TermColor
 #guard Color.rgbToAnsi256 255 0 0 == 196
 
 /-- Run the executable foundation checks. -/
-def main : IO UInt32 := do
+def main
+    : IO UInt32
+    := do
   IO.println "termcolor checks passed"
   pure 0
