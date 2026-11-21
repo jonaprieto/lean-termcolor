@@ -42,7 +42,12 @@ jobs:
       - name: Build API docs
         run: |
           lake -d docbuild update
-          lake -d docbuild build TermColor:docs
+          # The public modules have two entry points and the library has no namespace root.
+          lake -d docbuild build +TermColor:docInfo +TermColor.Detect:docInfo
+          lake -d docbuild exe doc-gen4 fromDb --build docbuild/.lake/build \
+            docbuild/.lake/build/api-docs.db TermColor TermColor.Detect Init Std Lake Lean
+          test -s docbuild/.lake/build/doc/TermColor.html
+          test -s docbuild/.lake/build/doc/TermColor/Detect.html
           touch docbuild/.lake/build/doc/.nojekyll
       - uses: actions/upload-pages-artifact@v3
         with:
