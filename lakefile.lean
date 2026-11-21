@@ -2,7 +2,7 @@ import Lake
 open Lake DSL
 
 package «termcolor» where
-  version := v!"1.1.7"
+  version := v!"1.1.8"
   leanOptions := #[⟨`autoImplicit, false⟩, ⟨`relaxedAutoImplicit, false⟩,
     ⟨`linter.missingDocs, true⟩]
 
