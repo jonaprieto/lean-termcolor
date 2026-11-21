@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.8 — 2026-11-20
+
+- Support Lean v4.36.0.
+
 ## 1.1.7 — 2026-09-09
 
 - Document the contribution policy and package problem.
